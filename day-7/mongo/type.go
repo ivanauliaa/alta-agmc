@@ -23,17 +23,17 @@ type (
 )
 
 func (conf *mongoConfig) Connect() {
-	dsn := fmt.Sprintf("mongodb://%s:%s@%s:%s",
+	dsn := fmt.Sprintf("mongodb+srv://%s:%s@%s/?retryWrites=true&w=majority",
 		conf.User,
 		conf.Pass,
 		conf.Host,
-		conf.Port,
 	)
 
 	var err error
 
+	serverApiOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client()
-	clientOptions.ApplyURI(dsn)
+	clientOptions.ApplyURI(dsn).SetServerAPIOptions(serverApiOptions)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		panic(err)
